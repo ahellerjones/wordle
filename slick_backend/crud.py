@@ -5,6 +5,7 @@ file_dir = os.path.dirname(__file__)
 sys.path.append(file_dir)
 import models
 import schemas
+import datetime.datetime
 
 # MODELS ARE HOW THE DATA IS ORGANIZED IN THE DBs
 # SCHEMAS ARE THE DATA THAT COMES IN OR OUT 
@@ -18,22 +19,22 @@ import schemas
 # Which actually seems kind of fucked up but oh well. I like 'database schemas' but yolo
 
 def create_user(db: Session, user_id: str): 
-    new_user_obj = models.user(user_id=user)
-    db.add(new_user_obj)
+    new_user_record = models.user(user_id=user)
+    db.add(new_user_record)
     db.commit()
-    db.refresh(new_user_obj)
-    return new_user_obj
+    db.refresh(new_user_record)
+    return new_user_record
 
 
 def read_game(db: Session, user_id: str):
-    last_record = db.query(models.daily_attempts)\
+    attempts = db.query(models.daily_attempts)\
         .filter(models.daily_attempts.user_id == user_id)\
         .order_by(models.daily_attempts.attempt_number.asc())
 
-    if not last_record:
+    if not attempts:
         raise HTTPException(status_code=404, detail="No game found for user. User needs an attempt.")
 
-    return last_record
+    return attempts
 
 def create_attempt(db: Session, user_id: str, attempt: str):
 
@@ -42,17 +43,17 @@ def create_attempt(db: Session, user_id: str, attempt: str):
         .order_by(models.daily_attempts.attempt_number.desc())\
         .first().attempt_number
 
-    attempt_obj = models.daily_attempts(user_id=user_id, attempt=attempt, \
+    attempt_record = models.daily_attempts(user_id=user_id, attempt=attempt, \
             attempt_number=1 if not last_attempt_number else last_attempt_number+1)
 
-    db.add(attempt_obj)
+    db.add(attempt_record)
     db.commit()
-    db.refresh(attempt_obj) 
-    return attempt_obj
+    db.refresh(attempt_record) 
+    return attempt_record
 
-
-
-
+def update_historical_wordle(db: Session, user_id: str, date: datetime.date, wordle_word: str, attempt_number: int):
+    date_record = models.historical_wordles(date=date, wordle_word=wordle_word, \
+        attempt_number=attempt_number)
 
 
 def update_contact(db: Session, contact_id: int, contact: schemas.ContactUpdate, user_id: str): 

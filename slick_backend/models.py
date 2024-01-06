@@ -25,10 +25,8 @@ class daily_attempts(Base):
 class historical_wordles(Base):
     __tablename__ = "historical_wordles"
 
-    # date + wordle_word = wordle_id; unique and used as dimension
-    wordle_id = Column(String, primary_key=True, index=True)
-    date = Column(date, unique=True)
-    wordle_word = Column(String, primary_key=True)
+    date = Column(date, primary_key=True)
+    wordle_word = Column(String)
     # below are statistics related to all past wordle words
     first_attempt_successes = Column(Integer)
     second_attempt_successes = Column(Integer)
