@@ -31,9 +31,10 @@ def read_game(db: Session, user_id: String):
         .order_by(models.daily_attempts.attempt_number.asc())
 
     if not last_record:
-        raise HTTPException(status_code=404, detail="No game found for user.")
-        
-    return 
+        # could create user here
+        raise HTTPException(status_code=404, detail="No game found for user. User needs an attempt.")
+
+    return last_record
 
 def create_attempt(db: Session, user_id: String, attempt: String):
     attempt_obj = models.Attempt(user_id=user_id, attempt=attempt)
