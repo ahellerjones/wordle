@@ -19,6 +19,17 @@ import datetime.datetime
 # Which actually seems kind of fucked up but oh well. I like 'database schemas' but yolo
 
 def create_user(db: Session, user_id: str): 
+    """
+    Create a new user record in the database.
+
+    Parameters:
+        db (Session): The database session.
+        user_id (str): The ID of the user.
+
+    Returns:
+        user: The newly created user record.
+            user_id (str): The ID of the user.
+    """
     new_user_record = models.user(user_id=user)
     db.add(new_user_record)
     db.commit()
@@ -27,6 +38,16 @@ def create_user(db: Session, user_id: str):
 
 
 def read_game(db: Session, user_id: str):
+    """
+    Retrieve the daily attempts of a user from the database.
+
+    Parameters:
+        db (Session): The database session.
+        user_id (str): The ID of the user.
+
+    Returns:
+        Query: The query result containing the daily attempts of the user (max 6)
+    """
     attempts = db.query(models.daily_attempts)\
         .filter(models.daily_attempts.user_id == user_id)\
         .order_by(models.daily_attempts.attempt_number.asc())
@@ -37,6 +58,17 @@ def read_game(db: Session, user_id: str):
     return attempts
 
 def create_attempt(db: Session, user_id: str, attempt: str):
+    """
+    Creates a new attempt record in the database for a given user.
+
+    Parameters:
+        db (Session): The database session object.
+        user_id (str): The identifier of the user for whom the attempt is being created.
+        attempt (str): The attempt string.
+
+    Returns:
+    - The newly created attempt record.
+    """
 
     last_attempt_number = db.query(models.daily_attempts)\
         .filter(models.daily_attempts.user_id == user_id)\
