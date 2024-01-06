@@ -1,1 +1,33 @@
-3 Tables 
+3 Tables  -- however gabe wants to do this tbh. 
+
+daily_attempts:
+"""
+  running record of all attempts. max per user is 6. refreshes daily
+
+""
+- user_id/token
+- attempt number
+- success
+
+historical_wordles:
+"""
+  ### data is UPDATED upon backend check of wordle success
+  
+  daily log of all wordles. columns first_attempt_success, second_attempt_success, ...
+"""
+  wordle_id: date+word concat,
+  first_attempt_success: int
+  second_attempt_success: int
+  third_attempt_success: int
+  fourth_attempt_success: int
+  fifth_attempt_success: int
+
+"""
+
+Have tokens refer to users
+crud.py 
+
+- create_user() -> token : str -- this token is used to identify a user and their games 
+
+- get_users_game(token:str) -> game : Game Model
+- attempt_by_user(token:str, attempt:str) -> game : Game Model

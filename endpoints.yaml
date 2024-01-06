@@ -31,8 +31,7 @@ POST -- their attempted solution
 Resp 
 200 Accepted attempt
 { 
-  "letters":
-  {
+  "letters": {
     "grey": [],
     "green": [],
     "yellow": []
@@ -79,6 +78,7 @@ GET -- get the stats of all attempts for this word.
 }
 Resp. 
 { 
+  "word": "store"
   "1": 2
   "2": 2
   "3": 10
