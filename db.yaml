@@ -1,1 +1,42 @@
-3 Tables 
+3 Tables  -- however gabe wants to do this tbh. 
+all contained in models.py
+
+users:
+"""
+  user_id: int
+  username: varchar
+"""
+
+daily_attempts:
+"""
+  running record of all attempts. max per user is 6. 
+  refreshes daily (truncate at midnight or whenever new word goes out)
+"""
+- user_id/token: varchar
+- attempt number: int
+- success: bool
+
+historical_wordles:
+"""
+  --- data is UPDATED upon backend check of wordle success
+  --- on successful try, attempt is logged in running total
+  daily log of all wordles. columns first_attempt_success, second_attempt_success, ...
+  used to sum all users' successes. will send stats to frontend for bar graph display
+"""
+  wordle_id (date+word concat to make unique id): varchar
+  date: date
+  wordle_word: varchar
+  first_attempt_successes: int
+  second_attempt_successes: int
+  third_attempt_successes: int
+  fourth_attempt_successes: int
+  fifth_attempt_successes: int
+"""
+
+Have tokens refer to users
+crud.py 
+
+- create_user() -> token : str -- this token is used to identify a user and their games 
+
+- get_users_game(token:str) -> game : Game Model
+- attempt_by_user(token:str, attempt:str) -> game : Game Model

@@ -8,9 +8,6 @@ from pydantic import BaseModel
 
 # We start off with the BaseModel and create a Base class
 # this is data that every model will inherit. 
-
-# schemas will be the form that data is returned 
-
 class ContactBase(BaseModel):
     name: str 
     address: Optional[str] = None
