@@ -2,8 +2,8 @@
 
 daily_attempts:
 """
-  running record of all attempts. max per user is 6. refreshes daily
-
+  running record of all attempts. max per user is 6. 
+  refreshes daily (truncate at midnight or whenever new word goes out)
 ""
 - user_id/token
 - attempt number
@@ -12,7 +12,7 @@ daily_attempts:
 historical_wordles:
 """
   ### data is UPDATED upon backend check of wordle success
-  
+  ### on successful try, attempt is logged in running total
   daily log of all wordles. columns first_attempt_success, second_attempt_success, ...
 """
   wordle_id: date+word concat,
