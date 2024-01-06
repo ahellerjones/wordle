@@ -1,0 +1,120 @@
+- /token
+-- used to get a jwt for the cookie for the user. Fill this out later
+GET 
+No Content ??? 
+Resp. 
+{ 
+  "cookie": "asdl;kfja;sldkjflasdkjf"
+}
+POST
+{ 
+  "cookie": "asdl;kfja;sldkjflasdkjf"
+}
+Resp 
+{ 
+  same as /game 
+}
+
+
+Resp
+200
+{
+  "token": "asdl;kfja;sldkjflasdkjf"
+}
+
+- /game 
+-- the main place that users send requests to 
+POST -- their attempted solution 
+{ 
+  "attempt": "store"
+}
+Resp 
+200 Accepted attempt
+{ 
+  "letters":
+  {
+    "grey": [],
+    "green": [],
+    "yellow": []
+  },
+  "attempts":  
+  [
+    [
+      {
+        "letter": "s",
+        "state": "grey"
+      },
+      {
+        "letter": "t",
+        "state": "grey"
+      },
+      {
+        "letter": "o",
+        "state": "yellow"
+      },
+      {
+        "letter": "r",
+        "state": "grey"
+      },
+      {
+        "letter": "e",
+        "state": "green"
+      },
+    ],
+    [...],
+    [...]
+  ]
+}
+400 Bad Request
+- Not in word list, 
+- not 5 letter word -- checked by the front end.
+- invalid characters.
+
+---- Today ^ ----
+
+- /stats 
+GET -- get the stats of all attempts for this word.  
+{ 
+  "date": "DD:MM:YYYY" 
+}
+Resp. 
+{ 
+  "1": 2
+  "2": 2
+  "3": 10
+  "4": 4
+  "5": 3
+  "6": 0
+}
+
+
+
+hello gang
+
+                        _.-**-._
+                     _,(        ),_
+                  .-"   '-^----'   "-.
+               .-'                    '-.
+             .'                          '.
+           .'    __.--**'""""""'**--.__    '.
+          /_.-*"'__.--**'""""""'**--.__'"*-._\
+         /_..-*"'   .-*"*-.  .-*"*-.   '"*-.._\
+        :          /       ;:       \          ;
+        :         :     *  !!  *     :         ;
+         \        '.     .'  '.     .'        /
+          \         '-.-'      '-.-'         /
+       .-*''.                              .'-.
+    .-'      '.                          .'    '.
+   :           '-.        _.._        .-'        '._
+  ;"*-._          '-._  --___ `   _.-'        _.*'  '*.
+ :      '.            `"*-.__.-*"`           (        :
+  ;      ;                 *|                 '-.     ;
+   '---*'                   |                    ""--'
+    :                      *|                      :
+    '.                      |                     .'
+      '.._                 *|        ____----.._-'
+       \  """----_____------'-----"""         /
+        \  __..-------.._        ___..---._  /
+        :'"              '-..--''          "';
+         '""""""""""""""""' '"""""""""""""""'
+         my dog ^ 
