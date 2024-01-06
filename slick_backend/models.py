@@ -16,11 +16,8 @@ class user(Base):
 class daily_attempts(Base): 
     __tablename__ = "daily_attempts"
 
-    # unique ID for each attempt in table
-    attempt_id = Column(Integer, primary_key=True, index=True) 
     # references user table, max 6 in this table (since it's a daily table)
     user_id = Column(Integer, ForeignKey('users.user_id') )
-    wordle_word = Column(String, ForeignKey('historical_wordles.wordle_word') )
     attempt = Column(String)
     # 1 - 6 based on which attempt
     attempt_number = Column(Integer)

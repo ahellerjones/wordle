@@ -17,7 +17,7 @@ import schemas
 # And then the methods return the created db object.
 # Which actually seems kind of fucked up but oh well. I like 'database schemas' but yolo
 
-def create_user(db: Session, user_id: String): 
+def create_user(db: Session, user_id: str): 
     new_user_obj = models.user(user_id=user)
     db.add(new_user_obj)
     db.commit()
@@ -25,24 +25,35 @@ def create_user(db: Session, user_id: String):
     return new_user_obj
 
 
-def read_game(db: Session, user_id: String):
+def read_game(db: Session, user_id: str):
     last_record = db.query(models.daily_attempts)\
         .filter(models.daily_attempts.user_id == user_id)\
         .order_by(models.daily_attempts.attempt_number.asc())
 
     if not last_record:
-        # could create user here
         raise HTTPException(status_code=404, detail="No game found for user. User needs an attempt.")
 
     return last_record
 
-def create_attempt(db: Session, user_id: String, attempt: String):
-    attempt_obj = models.Attempt(user_id=user_id, attempt=attempt)
+def create_attempt(db: Session, user_id: str, attempt: str):
+
+    last_attempt_number = db.query(models.daily_attempts)\
+        .filter(models.daily_attempts.user_id == user_id)\
+        .order_by(models.daily_attempts.attempt_number.desc())\
+        .first().attempt_number
+
+    attempt_obj = models.daily_attempts(user_id=user_id, attempt=attempt, \
+            attempt_number=1 if not last_attempt_number else last_attempt_number+1)
 
     db.add(attempt_obj)
     db.commit()
-    db.refresh(attempt_obj) # I think this updates the user's ID etc. 
+    db.refresh(attempt_obj) 
     return attempt_obj
+
+
+
+
+
 
 def update_contact(db: Session, contact_id: int, contact: schemas.ContactUpdate, user_id: str): 
     db_contact = db.query(models.Contact).filter(
