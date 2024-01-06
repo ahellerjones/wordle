@@ -85,8 +85,20 @@ def create_attempt(db: Session, user_id: str, attempt: str):
     return attempt_record
 
 def update_historical_wordle(db: Session, user_id: str, date: datetime.date, wordle_word: str, attempt_number: int):
-    date_record = models.historical_wordles(date=date, wordle_word=wordle_word, \
-        attempt_number=attempt_number)
+    todays_record = db.query(models.historical_wordles)\
+        .filter(models.historical_wordles.date == date)
+
+    if not todays_record:
+        new_date_record = models.historical_wordles(date=date, wordle_word=wordle_word, \
+            first_attempt_successes = 1 if attempt_number == 1 else 0, \
+            second_attempt_successes = 1 if attempt_number == 2 else 0, \
+            third_attempt_successes = 1 if attempt_number == 3 else 0, \
+            fourth_attempt_successes = 1 if attempt_number == 4 else 0, \
+            fifth_attempt_successes = 1 if attempt_number == 5 else 0
+            )
+    else:
+        
+            
 
 
 def update_contact(db: Session, contact_id: int, contact: schemas.ContactUpdate, user_id: str): 
