@@ -47,6 +47,7 @@ def read_game(db: Session, user_id: str):
 
     Returns:
         Query: The query result containing the daily attempts of the user (max 6)
+            attempt contains (user_id, attempt, attempt_number)
     """
     attempts = db.query(models.daily_attempts)\
         .filter(models.daily_attempts.user_id == user_id)\
@@ -67,7 +68,7 @@ def create_attempt(db: Session, user_id: str, attempt: str):
         attempt (str): The attempt string.
 
     Returns:
-    - The newly created attempt record.
+    - The newly created attempt record (user_id, attempt, attempt_number)
     """
 
     last_attempt_number = db.query(models.daily_attempts)\
