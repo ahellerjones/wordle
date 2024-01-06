@@ -96,8 +96,20 @@ def update_historical_wordle(db: Session, user_id: str, date: datetime.date, wor
             fourth_attempt_successes = 1 if attempt_number == 4 else 0, \
             fifth_attempt_successes = 1 if attempt_number == 5 else 0
             )
-    else:
-        
+    else:   
+        new_date_record = models.historical_wordles(date=date, wordle_word=wordle_word, \
+            first_attempt_successes = todays_record.first_attempt_successes + 1 if attempt_number == 1 else todays_record.first_attempt_successes, \
+            second_attempt_successes = todays_record.second_attempt_successes + 1 if attempt_number == 2 else todays_record.second_attempt_successes, \
+            third_attempt_successes = todays_record.third_attempt_successes + 1 if attempt_number == 3 else todays_record.third_attempt_successes, \
+            fourth_attempt_successes = todays_record.fourth_attempt_successes + 1 if attempt_number == 4 else todays_record.fourth_attempt_successes, \
+            fifth_attempt_successes = todays_record.fifth_attempt_successes + 1 if attempt_number == 5 else todays_record.fifth_attempt_successes
+            )
+
+    db.add(new_date_record)
+    db.commit()
+    db.refresh(new_date_record)
+    return new_date_record
+
             
 
 
