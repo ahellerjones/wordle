@@ -8,6 +8,7 @@ import schemas
 
 # MODELS ARE HOW THE DATA IS ORGANIZED IN THE DBs
 # SCHEMAS ARE THE DATA THAT COMES IN OR OUT 
+
 # These functions transform data schemas into db models and place them into the dbs.
 # Each crud operation function gets
 # an instance of the db,
@@ -16,36 +17,31 @@ import schemas
 # And then the methods return the created db object.
 # Which actually seems kind of fucked up but oh well. I like 'database schemas' but yolo
 
-def create_user(db: Session, user: schemas.UserCreate): 
-    db_user_obj = models.User(username=user.username, 
-    hashed_password=user.password)
-    db.add(db_user_obj)
+def create_user(db: Session, user_id: String): 
+    new_user_obj = models.user(user_id=user)
+    db.add(new_user_obj)
     db.commit()
-    db.refresh(db_user_obj) # I think this updates the user's ID etc. 
-    return db_user_obj
-    
-def read_user(db: Session, user_id: int):
-    return db.query(models.User).filter(models.User.id == user_id).first()
+    db.refresh(new_user_obj)
+    return new_user_obj
 
-def read_user_by_username(db: Session, username: str):
-    return db.query(models.User).filter(models.User.username == username).first()
 
-def read_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.User).offset(skip).limit(limit).all()
+def read_game(db: Session, user_id: String):
+    last_record = db.query(models.daily_attempts)\
+        .filter(models.daily_attempts.user_id == user_id)\
+        .order_by(models.daily_attempts.attempt_number.asc())
 
-def create_contact(db: Session, contact: schemas.ContactCreate, user_id: str): 
-    db_contact_obj = models.Contact(**contact.dict(), owner_id=user_id) # Unfurl the contact into a dict and put it into a Contact model
-    exists = db.query(models.Contact).filter(
-        models.Contact.owner_id == user_id
-        ).filter(
-        models.Contact.name == contact.name
-        ).first()
-    if exists is not None:
-        raise HTTPException(status_code=409, detail="Contact with this ID already exists")
-    db.add(db_contact_obj)
+    if not last_record:
+        raise HTTPException(status_code=404, detail="No game found for user.")
+        
+    return 
+
+def create_attempt(db: Session, user_id: String, attempt: String):
+    attempt_obj = models.Attempt(user_id=user_id, attempt=attempt)
+
+    db.add(attempt_obj)
     db.commit()
-    db.refresh(db_contact_obj)
-    return db_contact_obj
+    db.refresh(attempt_obj) # I think this updates the user's ID etc. 
+    return attempt_obj
 
 def update_contact(db: Session, contact_id: int, contact: schemas.ContactUpdate, user_id: str): 
     db_contact = db.query(models.Contact).filter(
@@ -76,20 +72,3 @@ def update_contact(db: Session, contact_id: int, contact: schemas.ContactUpdate,
     db.commit()
     db.refresh(db_contact)
     return db_contact
-
-def read_contacts_for_user(db: Session, user_id: str): 
-    # I think this is how we do this. 
-    return db.query(models.Contact).filter(models.Contact.owner_id == user_id)
-
-# Delete contact from database
-def delete_contact(db: Session, user_id: str, contact_id: int):
-    contact = db.query(models.Contact).filter(
-        models.Contact.owner_id == user_id
-    ).filter(
-        models.Contact.id == contact_id).first()
-    if contact:
-        db.delete(contact)
-        db.commit()
-        return contact
-    else:
-        raise HTTPException(status_code=404, detail="Contact not found")
