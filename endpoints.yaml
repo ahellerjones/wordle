@@ -1,25 +1,16 @@
-- /token
+- /
 -- used to get a jwt for the cookie for the user. Fill this out later
 GET 
-No Content ??? 
-Resp. 
+No Body
+Resp. cookies not set, user has never visited before  
 { 
-  "cookie": "asdl;kfja;sldkjflasdkjf"
+  // Sets the cookies if not already set 
 }
-POST
-{ 
-  "cookie": "asdl;kfja;sldkjflasdkjf"
-}
+GET 
+No Body w/ cookies in the header
 Resp 
 { 
   same as /game 
-}
-
-
-Resp
-200
-{
-  "token": "asdl;kfja;sldkjflasdkjf"
 }
 
 - /game 

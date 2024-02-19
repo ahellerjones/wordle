@@ -30,7 +30,7 @@ def read_game(db: Session, user_id: str):
     attempts = db.query(models.daily_attempts)\
         .filter(models.daily_attempts.user_id == user_id)\
         .order_by(models.daily_attempts.attempt_number.asc())
-
+    # This should return an empty list, it's very possible to read a game with no attempts in it. 
     if not attempts:
         raise HTTPException(status_code=404, detail="No game found for user. User needs an attempt.")
 

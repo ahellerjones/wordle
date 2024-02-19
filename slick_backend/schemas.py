@@ -57,24 +57,47 @@ class UserBase(BaseModel):
 
 # Note, when we create, we need to supply the password
 class UserCreate(UserBase):
-    password: str
+    pass
 
 # However, when we return a user from the API we don't include 
 # the pword, only the user ID and the contacts list. 
 class User(UserBase):
     id: int
-    contacts: list[Contact] = []
+    attempt: list[Contact] = []
 
     class Config:
-        # This tells Pydantic model to read the data
-        # NOT as a dictionary, but as an ORM model 
-        # (basically just a class) 
         orm_mode = True
+        exclude_unset = True
 
 # Response models we'll use for issuing tokens
 class Token(BaseModel):
     access_token: str
     token_type: str
+    class Config:
+        orm_mode = True
+        exclude_unset = True
+
+class Letters(BaseModel): 
+    grey: Optional[str] = None 
+    green: Optional[str] = None 
+    yellow: Optional[str] = None 
+    class Config:
+        orm_mode = True
+        exclude_unset = True
+class AttemptResponse(BaseModel): 
+    letter: str 
+    state: str 
+    class Config:
+        orm_mode = True
+        exclude_unset = True
+
+class Game(BaseModel): 
+    letters: Letters = None
+    attempts = list[AttemptResponse] = []
+    class Config:
+        orm_mode = True
+        exclude_unset = True
+
 
 class TokenData(BaseModel):
     username: str | None = None
