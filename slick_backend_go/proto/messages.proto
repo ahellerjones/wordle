@@ -1,0 +1,15 @@
+syntax = "proto3";
+option go_package = "slick_backend_go/proto";
+package proto;
+service DOMServer {
+    // Obtains the feature at a given position.
+    rpc ReadDb(ID) returns (Record) {}
+ }
+
+ message ID { 
+    int32 id = 1;
+ }
+
+ message Record { 
+    string val = 1;
+ }

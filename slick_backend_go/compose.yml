@@ -1,0 +1,15 @@
+version: '3'
+services:
+  # http_service:
+  #   build: ./src/http_service
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - grpc_service
+  grpc_service:
+    build: 
+      context: ./
+      dockerfile: ./dom/Dockerfile
+    ports:
+      - "50051:50051"
+    # entrypoint: /bin/bash
