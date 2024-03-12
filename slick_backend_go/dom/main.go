@@ -14,19 +14,25 @@ type Server struct {
 }
 
 func (s *Server) ReadDb(ctx context.Context, id *pb.ID) (*pb.Record, error) {
+	fmt.Println("Got the request from grpc!")
 	return &pb.Record{
 		Val: fmt.Sprintf("The Id you gave was: %d", id.Id),
 	}, nil
 }
 
 func main() {
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", 12345))
+	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	fmt.Println("Listening...")
 	var opts []grpc.ServerOption
 	grpcServer := grpc.NewServer(opts...)
+	fmt.Println("Created server ...")
 	pb.RegisterDOMServerServer(grpcServer, &Server{})
-	grpcServer.Serve(lis)
+	fmt.Println("Serving cunt...")
+	err = grpcServer.Serve(lis)
+	if err != nil {
+		fmt.Println(err)
+	}
+
 }
