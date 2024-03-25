@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"net/http"
 	pb "slick_backend_go/proto/gen/pb-go/slick_backend_go/proto"
 
 	"google.golang.org/grpc"
@@ -25,14 +24,12 @@ func main() {
 			fmt.Println("Recovered from err: ", err)
 		}
 	}()
-	fmt.Print("Hello!!")
+	fmt.Println("Starting http server")
 	// Define a handler function for the "/" route
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, World!") // Send response to the client
-
-	})
-	//var opts []grpc.DialOption
-	fmt.Println("Dialing")
+	// mux := http.NewServeMux()
+	// mux.HandleFunc("/", entry) // Set a client's cookies here.
+	// mux.HandleFunc("/get", getCookieHandler)
+	fmt.Println("Dialing grpc server")
 	conn, err := grpc.Dial("grpc_service:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {
@@ -40,14 +37,13 @@ func main() {
 	}
 	defer conn.Close()
 
-	fmt.Println("Creating client")
 	// Start the HTTP server on port 8080
 	// fmt.Println("Server is listening on port 8080...")
 	client := pb.NewDOMServerClient(conn)
 	id := &pb.ID{
-		Id: 10,
+		Id: "Jim",
 	}
-	fmt.Println("Sending req")
+	server := NewHttpServer(client)
 	record, err := client.ReadDb(context.Background(), id)
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -55,7 +51,8 @@ func main() {
 	val := record.GetVal()
 	fmt.Println(val)
 
-	err = http.ListenAndServe("localhost:8080", nil)
+	//err = http.ListenAndServe(":8080", mux)
+	err = server.ListenAndServe()
 	if err != nil {
 		fmt.Println("Error:", err)
 	}

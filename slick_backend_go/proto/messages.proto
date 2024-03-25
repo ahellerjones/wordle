@@ -3,11 +3,12 @@ option go_package = "slick_backend_go/proto";
 package proto;
 service DOMServer {
     // Obtains the feature at a given position.
-    rpc ReadDb(ID) returns (Record) {}
+    rpc ReadDb(ID) returns (Record) {} 
+    rpc GetUser(ID) returns (Record) {}
  }
 
  message ID { 
-    int32 id = 1;
+    string id = 1;
  }
 
  message Record { 

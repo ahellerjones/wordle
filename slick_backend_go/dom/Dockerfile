@@ -9,17 +9,23 @@ WORKDIR /app/dom
 # COPY ../proto/gen/pb-go/slick_backend_go/proto/*.go ../
 # # Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
 # RUN go mod download
-
+# RUN apt-get install -y sqlite3 libsqlite3-dev
 # Copy the source code into the container
 #COPY ../proto/gen/pb-go/slick_backend_go/*.go /app
-COPY proto/ /app/proto
-COPY dom/ /app/dom
 COPY go.mod /app/
 COPY go.sum /app/
+RUN go mod download
+
+COPY proto/ /app/proto
+COPY dom/*.go /app/dom
+
+# RUN apt-get install -y sqlite3 libsqlite3-dev
+# RUN /usr/bin/sqlite3 app/dom/test.db
 
 # Build the Go app
 # RUN cd /app/dom/
 RUN go build -o main .
+
 
 # Command to run the executable
 CMD ["./main"]

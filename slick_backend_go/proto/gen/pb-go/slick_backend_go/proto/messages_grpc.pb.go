@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type DOMServerClient interface {
 	// Obtains the feature at a given position.
 	ReadDb(ctx context.Context, in *ID, opts ...grpc.CallOption) (*Record, error)
+	GetUser(ctx context.Context, in *ID, opts ...grpc.CallOption) (*Record, error)
 }
 
 type dOMServerClient struct {
@@ -43,12 +44,22 @@ func (c *dOMServerClient) ReadDb(ctx context.Context, in *ID, opts ...grpc.CallO
 	return out, nil
 }
 
+func (c *dOMServerClient) GetUser(ctx context.Context, in *ID, opts ...grpc.CallOption) (*Record, error) {
+	out := new(Record)
+	err := c.cc.Invoke(ctx, "/proto.DOMServer/GetUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DOMServerServer is the server API for DOMServer service.
 // All implementations should embed UnimplementedDOMServerServer
 // for forward compatibility
 type DOMServerServer interface {
 	// Obtains the feature at a given position.
 	ReadDb(context.Context, *ID) (*Record, error)
+	GetUser(context.Context, *ID) (*Record, error)
 }
 
 // UnimplementedDOMServerServer should be embedded to have forward compatible implementations.
@@ -57,6 +68,9 @@ type UnimplementedDOMServerServer struct {
 
 func (UnimplementedDOMServerServer) ReadDb(context.Context, *ID) (*Record, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReadDb not implemented")
+}
+func (UnimplementedDOMServerServer) GetUser(context.Context, *ID) (*Record, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
 
 // UnsafeDOMServerServer may be embedded to opt out of forward compatibility for this service.
@@ -88,6 +102,24 @@ func _DOMServer_ReadDb_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DOMServer_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ID)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DOMServerServer).GetUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.DOMServer/GetUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DOMServerServer).GetUser(ctx, req.(*ID))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DOMServer_ServiceDesc is the grpc.ServiceDesc for DOMServer service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +130,10 @@ var DOMServer_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ReadDb",
 			Handler:    _DOMServer_ReadDb_Handler,
+		},
+		{
+			MethodName: "GetUser",
+			Handler:    _DOMServer_GetUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
